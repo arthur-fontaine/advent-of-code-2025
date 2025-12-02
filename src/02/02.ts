@@ -4,6 +4,8 @@ import { readFileSync } from "fs";
 const idRangesTxt = readFileSync(`${import.meta.dirname}/id_ranges.txt`).toString('utf-8')
 const idRanges = idRangesTxt.split(',')
 
+console.time()
+
 let sum = 0
 
 for (const idRange of idRanges) {
@@ -23,9 +25,11 @@ for (const idRange of idRanges) {
 console.log(sum)
 
 function checkPattern(s: string) {
-  const pattern = new RegExp('(.+?)\\1+')
-  const matched = s.match(pattern)?.[0]
-  const pattern2 = new RegExp('(.+)\\1+')
-  const matched2 = s.match(pattern2)?.[0]
-  return s === matched || s === matched2
+  for (let i = 1; i < s.length; i++) {
+    if (s.length % i !== 0) continue;
+    if (s.slice(0, i).repeat(s.length / i) === s) return true
+  }
+  return false
 }
+
+console.timeEnd()
