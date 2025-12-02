@@ -23,6 +23,9 @@ for (const idRange of idRanges) {
 console.log(sum)
 
 function checkPattern(s: string) {
-  const mid = s.slice(0, s.length / 2)
-  return `${mid}${mid}` === s
+  const pattern = new RegExp('(.+?)\\1+')
+  const matched = s.match(pattern)?.[0]
+  const pattern2 = new RegExp('(.+)\\1+')
+  const matched2 = s.match(pattern2)?.[0]
+  return s === matched || s === matched2
 }
