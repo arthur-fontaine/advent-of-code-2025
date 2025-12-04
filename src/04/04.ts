@@ -15,21 +15,30 @@ const matrix = [
   [1, 1]
 ]
 
-let t = 0
-for (let y = 0; y < diagram.length; y++) {
-  const row = diagram[y]!;
-  for (let x = 0; x < row.length; x++) {
-    const el = row[x];
+let rt = 0
+let t
+do {
+  t = 0
+  for (let y = 0; y < diagram.length; y++) {
+    const row = diagram[y]!;
+    for (let x = 0; x < row.length; x++) {
+      const el = row[x];
 
-    if (el !== '@') continue;
+      if (el !== '@') continue;
 
-    let filledAround = 0;
-    for (const move of matrix) {
-      if (diagram[y + move[1]!]?.[x + move[0]!] === '@') filledAround++
-      if (filledAround >= 4) break
+      let filledAround = 0;
+      for (const move of matrix) {
+        if (diagram[y + move[1]!]?.[x + move[0]!] === '@') filledAround++
+        if (filledAround >= 4) break
+      }
+      if (filledAround < 4) {
+        diagram[y]![x] = '.'
+        t++
+      }
     }
-    if (filledAround < 4) t++
   }
-}
+  console.log(`Remove ${t} rolls of paper`)
+  rt += t
+} while (t > 0)
 
-console.log(t)
+console.log(rt)
