@@ -2,14 +2,31 @@ import { readFileSync } from "node:fs"
 
 const input = readFileSync(`${__dirname}/input.txt`).toString()
 
-const ops = rotate(input.split('\n').map(r => r.split(/ +/).map(v => v.trim()).filter(v => v !== "")))
-
+const ops = rotate(input.split('\n').map(r => r.split('').map(v => v.trim())))
 let t = 0
+let currentT = null as number | null
+let currentOperator = ''
 for (const op of ops) {
-  const numbers = op.slice(0, -1).map(Number)
-  const operator = op.at(-1)!
-  t += eval(numbers.join(operator))
+  if (op.every(v => v === '')) {
+    if (currentT === null) throw new Error('currentT should not be null')
+    t += currentT
+    currentT = -1
+    currentOperator = ''
+    continue;
+  }
+  if (currentOperator === '') {
+    const operator = op.at(-1)!
+    currentOperator = operator
+    if (operator === '*') currentT = 1
+    else if (operator === '+') currentT = 0
+    else throw new Error(`Illegal operator ${JSON.stringify(operator)}`)
+  }
+  const number = Number(op.join('').replace(/\+|\*/, ''))
+  if (currentOperator === '*') currentT! *= number
+  else if (currentOperator === '+') currentT! += number
+  else throw new Error(`Illegal currentOperator ${JSON.stringify(currentOperator)}`)
 }
+t += currentT ?? 0
 console.log(t)
 
 function rotate<T>(mat: T[][]) {
